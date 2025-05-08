@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivina el Número</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Adivina el Número</h1>
+        <div class="game-container">
+            <div class="guess-container">
+                <label for="numberRange">Selecciona el rango:</label>
+                <select id="numberRange">
+                    <option value="1000">Del 1 al 1000</option>
+                    <option value="1000000">Del 1 al 1,000,000</option>
+                </select>
+                
+                <label for="guess">Introduce tu número:</label>
+                <input type="number" id="guess" min="1" max="1000000">
+                <button id="submit">Enviar</button>
+                <p id="message"></p>
+                <p id="last-hint"></p>
+
+                <!-- Nuevos elementos para el factorizador y la suma de cifras -->
+                <div>
+                    <label for="factorInput">Factorizar número:</label>
+                    <input type="number" id="factorInput" min="1" max="1000000">
+                    <button id="factorButton">Factorizar</button>
+                    <p id="factorResult"></p>
+                </div>
+                <div>
+                    <label for="sumInput">Sumar cifras de:</label>
+                    <input type="number" id="sumInput" min="1" max="1000000">
+                    <button id="sumButton">Sumar</button>
+                    <p id="sumResult"></p>
+                </div>
+
+                <!-- Nuevos elementos para la calculadora -->
+                <div>
+                    <h3>Calculadora Básica</h3>
+                    <input type="number" id="calcInput1" placeholder="Número 1">
+                    <input type="number" id="calcInput2" placeholder="Número 2">
+                    <div>
+                        <button id="addButton">Sumar</button>
+                        <button id="subtractButton">Restar</button>
+                        <button id="multiplyButton">Multiplicar</button>
+                        <button id="divideButton">Dividir</button>
+                    </div>
+                    <p id="calcResult"></p>
+                </div>
+            </div>
+            <div class="hints-container">
+                <strong>Pistas:</strong>
+                <ul id="hints"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+    <script src="hints.js"></script>
+</body>
+</html>
