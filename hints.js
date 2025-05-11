@@ -19,15 +19,19 @@ const hintOptions = [
     },
     {
         action: (num, guess) => {
-            const randomDigit = Math.floor(Math.random() * 10); // Genera un número aleatorio entre 0 y 9
-            const count = num.toString().split('').filter(digit => digit === randomDigit.toString()).length; // Cuenta cuántas veces aparece el dígito
-            
-            if (count > 0) {
-                return `El número contiene el dígito ${randomDigit} un total de ${count} veces.`;
-            } else {
-                return `El número no contiene el dígito ${randomDigit}.`;
+            // Obtener el botón activo
+            const activeButton = document.querySelector('button.active');
+
+            if (activeButton) {
+                const selectedRange = activeButton.id; // Suponiendo que los botones tienen IDs como 'range1000' o 'range1000000'
+
+                if (selectedRange === 'range1000') {
+                    return num > 500 ? 'El número es mayor que 500.' : 'El número es menor o igual a 500.';
+                } else if (selectedRange === 'range1000000') {
+                    return num > 500000 ? 'El número es mayor que 500,000.' : 'El número es menor o igual a 500,000.';
+                }
             }
-        }
+        },
     },
     {
         action: (num, guess) => {
