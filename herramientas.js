@@ -28,12 +28,28 @@ document.getElementById('sumButton').addEventListener('click', function() {
     document.getElementById('sumResult').innerText = `Suma de cifras: ${sum}`;
 });
 
+// Ajustar el evento de clic en el botón de múltiplos para incluir el encabezado dinámico
+document.getElementById('multiplesButton').addEventListener('click', function() {
+    const multiplesInput = parseInt(document.getElementById('multiplesInput').value);
+    const multiplesStart = parseInt(document.getElementById('multiplesStart').value);
 
+    if (isNaN(multiplesInput) || multiplesInput <= 0 || isNaN(multiplesStart) || multiplesStart <= 0) {
+        document.getElementById('multiplesResult').innerText = 'Por favor, introduce números válidos mayores que 0.';
+        return;
+    }
 
+    // Ajustar el cálculo de los múltiplos para que comiencen desde el menor múltiplo de multiplesInput mayor o igual a multiplesStart
+    const startValue = Math.ceil(multiplesStart / multiplesInput) * multiplesInput;
+    const multiples = Array.from({ length: 100 }, (_, i) => startValue + multiplesInput * i);
+
+    // Formatear la lista de múltiplos con la coma dentro del span y añadir "..." al final
+    const formattedMultiples = multiples.map((num, index) => `<span>${num}${index < multiples.length - 1 ? ',' : ''}</span>`).join('') + '<span>...</span>';
+
+    // Actualizar el encabezado dinámico y la lista de múltiplos
+    document.getElementById('multiplesResult').innerHTML = `<strong>Múltiplos de ${multiplesInput} desde ${multiplesStart}:</strong><br>${formattedMultiples}`;
+});
 
 //! CALCULADORA
-
-
 
 let currentNumber = '';
 let firstOperand = null;
@@ -165,4 +181,46 @@ document.addEventListener('keydown', (e) => {
     if (['+', '-', '*', '/'].includes(e.key)) setOperation(e.key);
     if (e.key === 'Enter' || e.key === '=') calculate();
     if (e.key === 'Escape') clear();
+});
+
+// Función para calcular números primos
+function calculatePrimes(start) {
+    const primes = [];
+    let num = start;
+
+    while (primes.length < 100) {
+        if (isPrime(num)) {
+            primes.push(num);
+        }
+        num++;
+    }
+
+    return primes;
+}
+
+// Verificar si un número es primo
+function isPrime(num) {
+    if (num < 2) return false;
+    for (let i = 2; i <= Math.sqrt(num); i++) {
+        if (num % i === 0) return false;
+    }
+    return true;
+}
+
+// Manejar el evento del botón de calcular números primos
+document.getElementById('primesButton').addEventListener('click', function() {
+    const primesStart = parseInt(document.getElementById('primesStart').value);
+
+    if (isNaN(primesStart) || primesStart < 1 || primesStart > 1000000) {
+        document.getElementById('primesResult').innerText = 'Por favor, introduce un número válido entre 1 y 1,000,000.';
+        return;
+    }
+
+    const primes = calculatePrimes(primesStart);
+
+    // Formatear la lista de números primos con la coma dentro del span y añadir "..." al final
+    const formattedPrimes = primes.map((num, index) => `<span>${num}${index < primes.length - 1 ? ',' : ''}</span>`).join('') + '<span>...</span>';
+
+    // Actualizar el encabezado dinámico y la lista de números primos
+    document.getElementById('primesResult').innerHTML = `<strong>Primos desde ${primesStart}:</strong><br>${formattedPrimes}`;
 });

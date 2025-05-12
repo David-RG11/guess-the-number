@@ -1,59 +1,81 @@
 // Lista de pistas posibles
 const hintOptions = [
     {
-        action: (num, guess) => num % 2 === 0 ? 'El número es par.' : 'El número es impar.'
+        action: (num, guess) => {
+            return {
+                message: num % 2 === 0 ? 'El número es par.' : 'El número es impar.',
+                isCorrect: (value) => isNaN(value) ? false : (value % 2 === 0) === (num % 2 === 0) // Comparar paridad
+            };
+        }
     },
     {
         action: (num, guess) => {
             if (isPrime(num)) {
-                return 'El número es primo.';
+                return {
+                    message: 'El número es primo.',
+                    isCorrect: (value) => isPrime(value) // Comprobar si el guess es primo
+                };
             } else {
                 const factors = factorize(num);
                 const randomFactor = factors[Math.floor(Math.random() * factors.length)]; // Selecciona un factor aleatorio
-                return `El número es múltiplo de ${randomFactor}.`; // Muestra un factor aleatorio
+                return {
+                    message: `El número es múltiplo de ${randomFactor}.`, // Muestra un factor aleatorio
+                    isCorrect: (value) => value % randomFactor === 0 // Comprobar si el guess es múltiplo del factor aleatorio 
+                };
             }
         }
     },
-    {
-        action: (num, guess) => num > 500000 ? 'El número es mayor que 500,000.' : 'El número es menor o igual a 500,000.'
-    },
+
     {
         action: (num, guess) => {
-            // Obtener el botón activo
             const activeButton = document.querySelector('button.active');
-
             if (activeButton) {
-                const selectedRange = activeButton.id; // Suponiendo que los botones tienen IDs como 'range1000' o 'range1000000'
+                const selectedRange = activeButton.id;
 
                 if (selectedRange === 'range1000') {
-                    return num > 500 ? 'El número es mayor que 500.' : 'El número es menor o igual a 500.';
+                    return {
+                        message: num > 500 ? 'El número es mayor que 500.' : 'El número es menor o igual a 500.',
+                        isCorrect: (value) => (value > 500) === (num > 500) // Comparar si ambos son mayores que 500
+                    };
                 } else if (selectedRange === 'range1000000') {
-                    return num > 500000 ? 'El número es mayor que 500,000.' : 'El número es menor o igual a 500,000.';
+                    return {
+                        message: num > 500000 ? 'El número es mayor que 500,000.' : 'El número es menor o igual a 500,000.',
+                        isCorrect: (value) => (value > 500000) === (num > 500000) // Comparar si ambos son mayores que 500,000
+                    };
                 }
             }
         },
     },
     {
         action: (num, guess) => {
-            const digitSum = sumDigits(num);
-            return `La suma de los dígitos es ${digitSum}.`;
+            const digitSum = sumDigits(num); // Calcular la suma de los dígitos del número original
+
+            // Definir la función isCorrect que compara el guess con digitSum
+            const isCorrect = (value) => {
+                return sumDigits(value) === digitSum; // Devuelve true si el valor coincide con la suma de los dígitos
+            };
+
+            return {
+                message: `La suma de los dígitos es ${digitSum}.`,
+                isCorrect: isCorrect // Devuelve la función isCorrect
+            };
         }
     },
     {
         action: (num, guess) => {
-            const digitCount = num.toString().length; // Cuenta el número de dígitos
-            return `El número tiene ${digitCount} dígitos.`;
+            const digitCount = num.toString().length;
+            return {
+                message: `El número tiene ${digitCount} dígitos.`,
+                isCorrect: (value) => isNaN(value) ? false :   value.toString().length === digitCount // Comparar el número de dígitos
+            };
         }
     },
     {
         action: (num, guess) => {
-            if (guess < num) {
-                return `El número buscado es mayor que ${guess}.`;
-            } else if (guess > num) {
-                return `El número buscado es menor que ${guess}.`;
-            } else {
-                return ''; // No se muestra nada si es igual
-            }
+            return {
+                message: guess < num ? `El número buscado es mayor que ${guess}.` : `El número buscado es menor que ${guess}.`,
+                isCorrect: (value) => value==guess? false : (value > guess) === (guess < num) // Comparar si ambos son mayores o menores
+            };
         }
     },
     {
@@ -61,6 +83,7 @@ const hintOptions = [
             const numStr = num.toString();
             const guessStr = guess.toString();
             let correctDigits = 0;
+            let correctDigits2 = 0;
 
             // Compara los dígitos en la misma posición
             for (let i = 0; i < Math.min(numStr.length, guessStr.length); i++) {
@@ -69,7 +92,23 @@ const hintOptions = [
                 }
             }
 
-            return `El número introducido (${guess}) tiene ${correctDigits} dígitos correctos en la misma posición.`;
+            return { message: `El número introducido (${guess}) tiene ${correctDigits} dígitos correctos en la misma posición.`,
+                isCorrect: (value) => {
+                    const valStr = value.toString();
+                    correctDigits2=0;
+                    for (let i = 0; i < Math.min(valStr.length, guessStr.length); i++) {
+                    if (valStr[i] === guessStr[i]) {
+                        
+                        correctDigits2++; 
+                    }
+                }
+                
+                   return correctDigits2 == correctDigits;
+                   
+                
+            }
+            }
+        
         }
     },
     {
@@ -86,31 +125,37 @@ const hintOptions = [
                 positionLabel = position === 0 ? 'primer' : position === 1 ? 'segundo' : position === 2 ? 'tercer' : position === 3 ? 'cuarto' : position === 4 ? 'quinto' : 'sexto'; // Otras posiciones
             }
 
-            return `El ${positionLabel} dígito del número es ${digit}.`;
+            return { message: `El ${positionLabel} dígito del número es ${digit}.`,
+                isCorrect: (value) => { 
+                    if (positionLabel === 'último') {
+                        return value.toString()[value.toString().length - 1] === digit;
+                    }else{
+                    return value.toString()[position] === digit; // Compara el dígito en la posición aleatoria
+                    }
+                }
+            }
         }
     }
 ];
 
-// Función que selecciona una pista aleatoria
+let hints = []; // Lista de mensajes de pistas
+let hintsCheck = []; // Lista para almacenar el estado de corrección de las pistas
+
 function giveHints(guess) {
-    let message = '';
     let attempts = 0; // Contador de intentos para evitar un bucle infinito
 
     // Intenta seleccionar una pista que no se haya dado
-    while (message === '' && attempts < 40) { // Limitar a 10 intentos para evitar bucles infinitos
+    while (attempts < 40) { // Limitar a 40 intentos para evitar bucles infinitos
         const randomHint = hintOptions[Math.floor(Math.random() * hintOptions.length)];
-        message = randomHint.action(numberToGuess, guess); // Pasa ambos argumentos
+        const hintResult = randomHint.action(numberToGuess, guess); // Obtener el resultado de la pista
 
         // Verifica si la pista ya existe en el arreglo de hints
-        if (message && hints.includes(message)) {
-            message = ''; // Reinicia el mensaje si ya existe
+        if (hintResult.message && !hints.some(hint => hint === hintResult.message)) {
+            hints.push(hintResult.message); // Almacena el mensaje de la pista
+            hintsCheck.push(hintResult.isCorrect); // Almacena el estado de corrección
+            break; // Salir del bucle si se ha encontrado una pista válida
         }
         attempts++;
-    }
-
-    // Agrega la pista al arreglo solo si no está vacía
-    if (message) {
-        hints.push(message);
     }
 }
 
