@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivina el Número</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Adivina el Número</h1>
+        <div class="game-container">
+            <div class="guess-container">
+                <label>Selecciona el rango:</label>
+                <div>
+                    <button id="range1000" class="active">Del 1 al 1000</button>
+                    <button id="range1000000">Del 1 al 1,000,000</button>
+                </div>
+                
+                <label for="guess">Introduce tu número:</label>
+                <input type="number" id="guess" min="1" max="1000">
+                <button id="submit">Enviar</button>
+                <p id="message"></p>
+                <p id="last-hint"></p>
+
+                <!-- Selector de herramientas -->
+                <label for="tools">Selecciona una herramienta:</label>
+                <select id="tools">
+                    <option value="">-- Selecciona --</option>
+                    <option value="factorizer">Factorizador</option>
+                    <option value="sumDigits">Sumar cifras</option>
+                    <option value="calculator">Calculadora</option>
+                    <option value="multiples">Calcular múltiplos</option>
+                    <option value="primes">Calcular primos</option>
+                </select>
+
+                <!-- Sección del factorizador -->
+                <div id="factorizer" class="tool-section" style="display: none;">
+                    <label for="factorInput">Factorizar número:</label>
+                    <input type="number" id="factorInput" min="1" max="1000000">
+                    <button id="factorButton">Factorizar</button>
+                    <p id="factorResult"></p>
+                </div>
+
+                <!-- Sección de suma de cifras -->
+                <div id="sumDigits" class="tool-section" style="display: none;">
+                    <label for="sumInput">Sumar cifras de:</label>
+                    <input type="number" id="sumInput" min="1" max="1000000">
+                    <button id="sumButton">Sumar</button>
+                    <p id="sumResult"></p>
+                </div>
+
+                
+                <!-- Sección de la calculadora -->
+<div id="calculator" class="tool-section" style="display: none;">
+    <h3>Calculadora</h3>
+    <div class="calc-display">
+        <div id="calcResult" class="calc-history"></div>
+        <input type="text" id="calcInput" placeholder="0" readonly>
+    </div>
+    <div class="calc-buttons">
+        <button class="numButton">7</button>
+        <button class="numButton">8</button>
+        <button class="numButton">9</button>
+        <button class="opButton">/</button>
+        
+        <button class="numButton">4</button>
+        <button class="numButton">5</button>
+        <button class="numButton">6</button>
+        <button class="opButton">*</button>
+        
+        <button class="numButton">1</button>
+        <button class="numButton">2</button>
+        <button class="numButton">3</button>
+        <button class="opButton">-</button>
+        
+        <button class="numButton">0</button>
+        <button class="numButton">.</button>
+        <button id="equalsButton">=</button>
+        <button class="opButton">+</button>
+        
+        <button id="clearButton" style="grid-column: span 2;">C</button>
+    </div>
+</div>
+
+<!-- Sección de calcular múltiplos -->
+<div id="multiples" class="tool-section" style="display: none;">
+    <label for="multiplesInput">Calcular múltiplos de:</label>
+    <input type="number" id="multiplesInput" min="1" max="1000000" value="1">
+    <label for="multiplesStart">Desde:</label>
+    <input type="number" id="multiplesStart" min="1" value="1">
+    <button id="multiplesButton">Calcular</button>
+    <p id="multiplesResult"></p>
+</div>
+
+<!-- Sección de calcular números primos -->
+<div id="primes" class="tool-section" style="display: none;">
+    <label for="primesStart">Calcular números primos desde:</label>
+    <input type="number" id="primesStart" min="1" max="1000000" value="1">
+    <button id="primesButton">Calcular</button>
+    <p id="primesResult"></p>
+</div>
+
+            </div>
+            <div class="hints-container">
+                <strong>Pistas:</strong>
+                <ul id="hints"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+    <script src="hints.js"></script>
+    <script src="herramientas.js"></script>
+</body>
+</html>
